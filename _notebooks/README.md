@@ -1,14 +1,5 @@
-# Auto-convert Jupyter Notebooks To Posts
+# Golf Tutorial
 
-[`fastpages`](https://github.com/fastai/fastpages) will automatically convert [Jupyter](https://jupyter.org/) Notebooks saved into this directory as blog posts!
+This is a replication of Dr. Andrew Gelman's tutorial on modelling golf putting success rates using Bayesian models. This has been implemented in PyMC3.
 
-You must save your notebook with the naming convention `YYYY-MM-DD-*.ipynb`.  Examples of valid filenames are:
-
-```shell
-2020-01-28-My-First-Post.ipynb
-2012-09-12-how-to-write-a-blog.ipynb
-```
-
-If you fail to name your file correctly, `fastpages` will automatically attempt to fix the problem by prepending the last modified date of your notebook. However, it is recommended that you name your files properly yourself for more transparency.
-
-See [Writing Blog Posts With Jupyter](https://github.com/fastai/fastpages#writing-blog-posts-with-jupyter) for more details.
+You can view the HTML page for the jupyter notebook [here](https://htmlpreview.github.io/?https://github.com/goodhamgupta/golf_tutorial_pymc3/blob/master/tutorial.html).

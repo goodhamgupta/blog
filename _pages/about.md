@@ -4,10 +4,10 @@ title: About Me
 permalink: /about/
 ---
 
-This is where you put the contents of your *About* page. Like all your pages, it's in [Markdown](https://guides.github.com/features/mastering-markdown/) format.
+Hi! I'm Shubham Gupta. Through this blog, I aim to talk a little bit about my current work and potential topics I'm interested in learning. Some of my main projects are available here:
 
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
+* [Snowplow Elixir Tracker](https://github.com/goodhamgupta/snowplow-elixir-tracker)
+* [Paper Reviews](https://github.com/goodhamgupta/paper_reviews)
+* [Doing Bayesian Data Analysis: Notes and Solutions](https://github.com/goodhamgupta/dbda_python)
 
-
-
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
+You can learn more about my work and contribute on [GitHub](https://github.com/goodhamgupta).
