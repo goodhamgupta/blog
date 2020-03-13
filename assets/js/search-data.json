@@ -28,7 +28,7 @@
 
   
       ,"page1": {
-          "title": "About Me",
+          "title": "You Found Me!",
           "content": "Hi! I’m Shubham Gupta. Through this blog, I aim to talk a little bit about my current work and potential topics I’m interested in learning. Some of my main projects are available here: . Snowplow Elixir Tracker | Paper Reviews | Doing Bayesian Data Analysis: Notes and Solutions | . You can learn more about my work and contribute on GitHub. .",
           "url": "https://goodhamgupta.github.io/blog/about/",
           "relUrl": "/about/",
