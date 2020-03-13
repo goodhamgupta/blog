@@ -1,6 +1,6 @@
 ---
 layout: page
-title: You Found Me!
+title: About Me
 permalink: /about/
 ---
 
