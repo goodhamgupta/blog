@@ -1,4 +1,152 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://goodhamgupta.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://goodhamgupta.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-04-23T06:56:13-05:00</updated><id>https://goodhamgupta.github.io/blog/feed.xml</id><title type="html">Shubham Gupta</title><subtitle>Shubham Gupta's blog</subtitle><entry><title type="html">Attention is all you need</title><link href="https://goodhamgupta.github.io/blog/nlp/attention/review/2020/04/20/attention.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2020-04-20T00:00:00-05:00</published><updated>2020-04-20T00:00:00-05:00</updated><id>https://goodhamgupta.github.io/blog/nlp/attention/review/2020/04/20/attention</id><content type="html" xml:base="https://goodhamgupta.github.io/blog/nlp/attention/review/2020/04/20/attention.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://goodhamgupta.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://goodhamgupta.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-04-23T07:03:00-05:00</updated><id>https://goodhamgupta.github.io/blog/feed.xml</id><title type="html">Shubham Gupta</title><subtitle>Shubham Gupta's blog</subtitle><entry><title type="html">How Much Knowledge Can You Pack Into The Parameters of a Language Model?</title><link href="https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/21/knowledge-lm.html" rel="alternate" type="text/html" title="How Much Knowledge Can You Pack Into The Parameters of a Language Model?" /><published>2020-04-21T00:00:00-05:00</published><updated>2020-04-21T00:00:00-05:00</updated><id>https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/21/knowledge-lm</id><content type="html" xml:base="https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/21/knowledge-lm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;This is a new paper which explores the limits of using their new T5
+model in a context-free QA domain.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;As with the T5 model itself, it is very interesting to see these
+one-model-to-rule-them-all architectures as they exhibit some form
+of generalization.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;I found this paper from Adam Roberts twitter thread which is
+available
+&lt;a href=&quot;https://twitter.com/ada_rob/status/1227062195671822336&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Core Idea&lt;/strong&gt;: This paper will test two main things:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;How well does the model create a knowledge base such that it can
+answer questions just based on this base and no other
+information.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Do model with more parameters store more information? Measuring
+knowledge retreiving ability is used to check this point.&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;paper-introduction&quot;&gt;Paper Introduction&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Reading Comprehension&lt;/strong&gt;: Given a question and context, lookup and
+give the answer.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Open domain question answering&lt;/strong&gt;: Random context-independent
+questions. It is given entire context(all the information possible
+in the world) and the model is expected to deduce the answer. &lt;em&gt;Open
+book&lt;/em&gt; exam.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Here, problem is similar to open book exam + no context given at
+all. Model should retreive info from parameters and return the
+values. &lt;em&gt;Closed book&lt;/em&gt; exam.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;T5: Treat every NLP task as text-to-text problem using encoder
+decoder Transformer.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;For natural questions dataset, evaluation is done as follows:&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;First method&lt;/strong&gt;:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;Ignore all “unanswerable” and “long answer” type questions.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;model trained to output single answer&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Questions with answers longer than 5 tokens are ignored&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Answers normalized before comparsion&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Answer is correct if it matches any of the annotated answers&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Second method&lt;/strong&gt;:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;Considered correct only if model predicts &lt;em&gt;all&lt;/em&gt; the answers
+correctly&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;For fine tuning, use AdaFactor Optimizer(need to read more about
+this one)&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;results&quot;&gt;Results&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;SOTA on Natural Questions(NQ) and WebQuestions(WQ) dataset. Worst
+performance on TriviaQA(TQA).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Performance increases with model size.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Guu et all(2020) performs better than T5 on NQ and WQ. Need to read
+this paper as well. It&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;Retreives Revevant documents&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Answers questions in end-to-end fashion&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Closed-book model seem to perform on par with open-book models,
+leading to new research directions.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;For multiple answer type questions, T5 lower than SOTA BUT much
+better than baseline that was published with the paper. Therefore,
+T5 can perform well on these types of questions as well.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;drawbacks&quot;&gt;Drawbacks&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Model is far too expensive to train.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Open-book models provide some indication of what information was
+used to answer the problem. HOWEVER, T5 just has a distribution over
+parameters that cannot be interpreted.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;MLE does not gurantee the model will learn a fact. Therefore,
+difficult to ensure the model learns specific information during
+pre-training&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Measure and improve performance on difficult QA tasks like DROP,
+which needs reasoning ability.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary></entry><entry><title type="html">Attention is all you need</title><link href="https://goodhamgupta.github.io/blog/nlp/attention/review/2020/04/20/attention.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2020-04-20T00:00:00-05:00</published><updated>2020-04-20T00:00:00-05:00</updated><id>https://goodhamgupta.github.io/blog/nlp/attention/review/2020/04/20/attention</id><content type="html" xml:base="https://goodhamgupta.github.io/blog/nlp/attention/review/2020/04/20/attention.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;This paper review is following the blog from Jay Alammar’s blog on
