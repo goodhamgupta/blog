@@ -4,13 +4,14 @@ layout: post
 author: Shubham Gupta
 categories: [nlp, language_model, review]
 author: Shubham Gupta
-title: 'How Much Knowledge Can You Pack Into The Parameters of a Language Model?'
+title: How much do you know?
+description: Measure amount of information stored in a model
 ---
 
 Introduction
 ============
 
--   This is a new paper which explores the limits of using their new T5
+-   This is a new paper which explores the limits of using their new T5 titled **How Much Knowledge Can You Pack Into The Parameters of a Language Model?**.
     model in a context-free QA domain.
 
 -   As with the T5 model itself, it is very interesting to see these
