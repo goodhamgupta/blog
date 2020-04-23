@@ -5,7 +5,7 @@ author: Shubham Gupta
 categories: [nlp, language_model, review]
 author: Shubham Gupta
 title: How much do you know?
-description: Measure amount of information stored in a model
+description: Measure the amount of information stored in a model
 ---
 
 Introduction
