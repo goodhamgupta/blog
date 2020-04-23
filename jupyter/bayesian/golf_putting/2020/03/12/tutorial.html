@@ -1225,8 +1225,20 @@ The number of effective samples is smaller than 25% for some parameters.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Hence, our model will now have two big parts:</p>
-$$y_j \sim binomial(n_j, p_j)$$$$p_j = 2\phi\big(\frac{sin^{-1}\frac{R-r}{x}}{\sigma}\big) - 1$$<p>Typically, the diameter of a golf ball is 1.68 inches and the cup is 4.25 inches i.e</p>
-$$r = 1.68 \text{inch}$$$$R = 4.25 \text{inch}$$
+<p>
+$$y_j \sim binomial(n_j, p_j)$$
+</p>
+<p>
+$$p_j = 2\phi\big(\frac{sin^{-1}\frac{R-r}{x}}{\sigma}\big) - 1$$
+</p>
+<p>Typically, the diameter of a golf ball is 1.68 inches and the cup is 4.25 inches i.e</p>
+<p>
+$$r = 1.68 \text{inch}$$
+
+
+$$R = 4.25 \text{inch}$$
+</p>
+
 </div>
 </div>
 </div>
@@ -2013,11 +2025,14 @@ Geometry Based Model: 6.40322%
 <ul>
 <li>If a putt goes short or more than 3 feet past the hole, it will not go in.</li>
 <li>Golfers aim for 1 foot past the hole</li>
-<li>The distance the ball goes, $u$, is distributed as: $$ u \sim \mathcal{N}\left(1 + \text{distance}, \sigma_{\text{distance}} (1 + \text{distance})\right), $$ where we will learn $\sigma_{\text{distance}}$.
+<li>The distance the ball goes, $u$, is distributed as:$$ u \sim \mathcal{N}\left(1 + \text{distance}, \sigma_{\text{distance}} (1 + \text{distance})\right), $$ where we will learn $\sigma_{\text{distance}}$.
 After working through the geometry and algebra, we get:</li>
 </ul>
 </blockquote>
+<p>
 $$P(\text{Good shot}) = \bigg(2\phi\big(\frac{sin^{-1}(\frac{R-r}{x})}{\sigma_{angle}}\big)-1\bigg)\bigg(\phi\bigg(\frac{2}{(x+1)\sigma_{distance}}\bigg) - \phi\bigg(\frac{-1}{(x+1)\sigma_{distance}}\bigg)\bigg)$$
+</p>
+
 </div>
 </div>
 </div>
