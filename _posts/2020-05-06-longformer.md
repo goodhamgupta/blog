@@ -12,9 +12,11 @@ title: 'LongFormer'
 
 - The NLP world had it's ImageNet moment with the introduction of the Transformer. 
 - The ability to be able to process multiple words/tokens in parallel and train models without labelled data(using self attention) led to creation of multiple models which gave us SOTA results on many interesting tasks such as Question Answering, Summarization, etc. -
-- However, the biggest drawback is the Transformer architecture is the limitation it has on the number of tokens it can process at a once, due to exponentially increasing memory and compute
-requirements(typically about 512 tokens), causing the performance to deterioate over large documents. 
-- Longformer by the team at Allen AI(paper [here](https://arxiv.org/abs/2004.05150)) aims to address this problem.
+- However, the biggest drawback is the Transformer architecture is the limitation it has on the number of tokens it can process at a once, due to exponentially increasing memory and compute requirements(typically about 512 tokens), causing the performance to deterioate over large documents. 
+- [Longformer](https://arxiv.org/abs/2004.05150) by the team at Allen AI aims to address this problem and demonstrate it's application to do transfer learning for large documents.
+- Other approaches to are described in recent work such as [Transformer XL](link), [Blockwise](link), [Reformer](link), etc. Their characteristics are mentioned below:
+
+![Comparison[]{data-label="fig:overview"}]({{site.baseurl}}/images/longformer/comparison.png)
 
 # Notes 
 
