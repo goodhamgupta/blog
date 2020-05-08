@@ -34,6 +34,11 @@ title: LongFormer
 - In this, we change the attention objective to only focus on the tokens that occur in a context window $w$. 
 - Each token will be able to attend to $\frac{1}{2}w$ number of tokens to it's left and right.
 
+## Dilated Sliding Window Attention
+
+
+## Global attention
+
 
 # Notes 
 
