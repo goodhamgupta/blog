@@ -37,7 +37,7 @@ title: LongFormer
 ## Dilated Sliding Window Attention
 
 
-## Global attention
+## Global sliding window attention
 
 
 # Notes 
