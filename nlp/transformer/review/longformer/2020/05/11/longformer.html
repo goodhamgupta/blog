@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>LongFormer | Shubham Gupta</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="LongFormer" />
+<meta name="author" content="Shubham Gupta" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Transformers for loooong documents" />
+<meta property="og:description" content="Transformers for loooong documents" />
+<link rel="canonical" href="https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html" />
+<meta property="og:url" content="https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html" />
+<meta property="og:site_name" content="Shubham Gupta" />
+<meta property="og:image" content="https://goodhamgupta.github.io/blog/images/longformer/training.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Shubham Gupta"},"description":"Transformers for loooong documents","headline":"LongFormer","dateModified":"2020-05-11T00:00:00-05:00","datePublished":"2020-05-11T00:00:00-05:00","@type":"BlogPosting","image":"https://goodhamgupta.github.io/blog/images/longformer/training.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html"},"url":"https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://goodhamgupta.github.io/blog/feed.xml" title="Shubham Gupta" /><script async src="https://www.googletagmanager.com/gtag/js?id=UA-160333740-1"></script>
+<script>
+  window['ga-disable-UA-160333740-1'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-160333740-1');
+</script>
+<link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>LongFormer | Shubham Gupta</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="LongFormer" />
+<meta name="author" content="Shubham Gupta" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Transformers for loooong documents" />
+<meta property="og:description" content="Transformers for loooong documents" />
+<link rel="canonical" href="https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html" />
+<meta property="og:url" content="https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html" />
+<meta property="og:site_name" content="Shubham Gupta" />
+<meta property="og:image" content="https://goodhamgupta.github.io/blog/images/longformer/training.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Shubham Gupta"},"description":"Transformers for loooong documents","headline":"LongFormer","dateModified":"2020-05-11T00:00:00-05:00","datePublished":"2020-05-11T00:00:00-05:00","@type":"BlogPosting","image":"https://goodhamgupta.github.io/blog/images/longformer/training.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html"},"url":"https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://goodhamgupta.github.io/blog/feed.xml" title="Shubham Gupta" /><script async src="https://www.googletagmanager.com/gtag/js?id=UA-160333740-1"></script>
+<script>
+  window['ga-disable-UA-160333740-1'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-160333740-1');
+</script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Shubham Gupta</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">LongFormer</h1><p class="page-description">Transformers for loooong documents</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-05-11T00:00:00-05:00" itemprop="datePublished">
+        May 11, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Shubham Gupta</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      8 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#nlp">nlp</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#transformer">transformer</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#review">review</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#longformer">longformer</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#introduction">Introduction</a></li>
+<li class="toc-entry toc-h1"><a href="#key-contributions">Key Contributions</a></li>
+<li class="toc-entry toc-h1"><a href="#attention-patterns">Attention Patterns</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#sliding-window-attention">Sliding Window Attention</a></li>
+<li class="toc-entry toc-h2"><a href="#dilated-sliding-window">Dilated Sliding Window</a></li>
+<li class="toc-entry toc-h2"><a href="#global-attention">Global Attention</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#linear-projections">Linear Projections</a></li>
+<li class="toc-entry toc-h3"><a href="#cuda-kernels">CUDA Kernels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#autoregressive-language-modelling">Autoregressive Language Modelling</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#attention-pattern">Attention Pattern</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#experimental-setup">Experimental Setup</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#task-and-datasets">Task and Datasets</a></li>
+<li class="toc-entry toc-h2"><a href="#training-and-evaluation">Training and Evaluation</a></li>
+<li class="toc-entry toc-h2"><a href="#results">Results</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#pretraining-and-finetuning">Pretraining and Finetuning</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#copy-initialization-trick">Copy initialization trick</a></li>
+<li class="toc-entry toc-h2"><a href="#pretraining">Pretraining</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#task-specific-results">Task-Specific Results</a></li>
+<li class="toc-entry toc-h1"><a href="#conclusion">Conclusion</a></li>
+<li class="toc-entry toc-h1"><a href="#references">References</a></li>
+</ul><h1 id="introduction">
+<a class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
+
+<ul>
+  <li>The NLP world had its ImageNet moment with the introduction of the Transformer in the paper <strong>Attention is All you Need</strong>.</li>
+  <li>The ability to be able to process multiple words/tokens in parallel and train models without labeled data(using self-attention) led to the creation of multiple models which gave us SOTA results on many interesting tasks such as Question Answering, Summarization, etc.</li>
+  <li>However, the biggest drawback is the Transformer architecture is the limitation it has on the number of tokens it can process at a once, due to exponentially increasing memory and compute requirements(typically about 512 tokens), causing the performance to deteriorate over large documents.</li>
+  <li>
+<a href="https://arxiv.org/abs/2004.05150">Longformer</a> by the team at Allen AI aims to address this problem and demonstrate it’s application to do transfer learning for large documents.</li>
+  <li>Other approaches to are described in recent work such as <a href="https://arxiv.org/abs/1901.02860">Transformer XL</a>, <a href="https://arxiv.org/abs/1911.02972">Blockwise</a>, <a href="https://arxiv.org/abs/2001.04451">Reformer</a>, etc. Their characteristics are mentioned below:</li>
+</ul>
+
+<p><img src="/blog/images/longformer/comparison.png" alt='Comparison[]{data-label="fig:overview"}'></p>
+
+<h1 id="key-contributions">
+<a class="anchor" href="#key-contributions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Key Contributions</h1>
+
+<ul>
+  <li>Transformers are expensive because of the massive matrix operations involved in the self-attention step. Since each token can attend to every other token in the given input, we get a runtime of $O(n^2)$, where $n$ is the sequence length(typically 512 tokens).</li>
+  <li>LongFormer aims to solve this using a form of sparse attention and reducing the operational complexity to $O(n)$. They achieve this using the concept of the sliding window and dilated sliding window.</li>
+  <li>The authors also show how this attention pattern can be modified (using dilation and global attention) on a per-task basis, thereby allowing us to use a single model for all tasks rather than creating task-specific architectures.</li>
+</ul>
+
+<h1 id="attention-patterns">
+<a class="anchor" href="#attention-patterns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attention Patterns</h1>
+<ul>
+  <li>The attention patterns implemented are as follows:
+<img src="/blog/images/longformer/attention.png" alt='Attention[]{data-label="fig:overview"}'>
+</li>
+</ul>
+
+<h2 id="sliding-window-attention">
+<a class="anchor" href="#sliding-window-attention" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sliding Window Attention</h2>
+
+<ul>
+  <li>
+<strong>TLDR</strong> : Similar to kernels for CNN which apply a matrix operation to a set of pixels and move onto the next set, apply attention to tokens in current window <em>only</em>.</li>
+  <li>In this, we change the attention objective to only focus on the tokens that occur in a context window $w$.</li>
+  <li>Each token will be able to attend to $\frac{1}{2}w$ number of tokens to it’s left and right.</li>
+  <li>
+<strong>Question</strong>: But doesn’t this limit the number of tokens being taken into account to only the tokens in the window?
+    <ul>
+      <li>Yes, it does. This is why we stack multiple layers of self-attention. As shown in the image below, the green neuron learns from the first 3 tokens(Lionel, Messi, is). However, the brown neuron learns from the green, yellow, and red neuron, who together learn from the first 5 tokens. This way, we can apply attention to long sequences(Lionel, Messi, is, the, true).</li>
+    </ul>
+  </li>
+  <li>As with the CNN, we will have $l$ layers to this sliding window attention(multi-head attention) implemented to learn low level and high-level features. A balance should be found between the number of layers $l$(efficiency) and the window size $w$(model representation capacity).</li>
+</ul>
+
+<p><img src="/blog/images/longformer/sliding_window.png" alt='Sliding Window Attention[]{data-label="fig:overview"}'></p>
+
+<ul>
+  <li>
+    <p><strong>Pros</strong>: Reduces computation from $O(n^2)$ to $O(n*w)$ i.e the computation complexity will only scale linearly now.</p>
+  </li>
+  <li>
+    <p><strong>Cons</strong>: To learn dependencies for a large sequence, we would either have to increase the window size $w$ or increase the number of layers $l$, both of which will cause an increase in the amount of memory and processing power required to train and test the model.</p>
+  </li>
+</ul>
+
+<h2 id="dilated-sliding-window">
+<a class="anchor" href="#dilated-sliding-window" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dilated Sliding Window</h2>
+<ul>
+  <li>
+<strong>TLDR</strong>: Use dilation instead of window attention i.e for some particular window size, take alternate elements while performing self-attention.</li>
+  <li>
+    <p>To solve the problem for long sequences, the authors propose that instead of considering all tokens in window $w$, consider alternate(or any number $d$)tokens instead. The range of tokens will now be $l * d * w$, which will be large for even a small value of $d$.</p>
+  </li>
+  <li>
+<strong>Pros</strong>: This small change will allow us to cover a wider range of tokens without significant changes to the architecture.</li>
+  <li>
+<strong>Cons</strong>: Skipping tokens might lead to loss of information in the lower layers which will get propagated to the higher layers. This will lead to unstable training and poor model performance.</li>
+</ul>
+
+<h2 id="global-attention">
+<a class="anchor" href="#global-attention" aria-hidden="true"><span class="octicon octicon-link"></span></a>Global Attention</h2>
+<ul>
+  <li>
+<strong>TLDR</strong>: Use full attention for certain tokens depending on the task. This is an engineering choice.</li>
+  <li>In BERT style models, optimal representation for input sequence varies by task.
+    <ul>
+      <li>For MLM, local context is used to predict the masked word</li>
+      <li>For classification, [CLS] token is used.</li>
+      <li>For QnA, the question is concatenated with the document to help model learn through self-attention.</li>
+    </ul>
+  </li>
+  <li>The windowed and dilated attention is not flexible enough to learn task-specific representations.</li>
+  <li>Hence, for some tokens enable global tokens i.e at these tokens, all tokens in the sequence can attend to it. For classification, enable global attention on the [CLS] token.</li>
+  <li>
+<strong>Pros</strong>:
+    <ul>
+      <li>Adding global attention improves performance for specific tasks. Since these tokens are limited in number, the complexity still stays at $O(n)$.</li>
+      <li>It also increases the representational power of the model.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="linear-projections">
+<a class="anchor" href="#linear-projections" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linear Projections</h3>
+
+<ul>
+  <li>
+<strong>TLDR</strong>: Use two sets of Q,K and V matrices, one for sliding window attention, one for global attention.</li>
+  <li>
+    <p>Attention is defined as:</p>
+
+    <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right" columnspacing=""><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>A</mi><mi>t</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo stretchy="false">(</mo><mi>Q</mi><mo separator="true">,</mo><mi>K</mi><mo separator="true">,</mo><mi>V</mi><mo stretchy="false">)</mo><mo>=</mo><mi>s</mi><mi>o</mi><mi>f</mi><mi>t</mi><mi>m</mi><mi>a</mi><mi>x</mi><mo stretchy="false">(</mo><mfrac><mrow><mi>Q</mi><msup><mi>K</mi><mi>T</mi></msup></mrow><msqrt><msub><mi>d</mi><mi>k</mi></msub></msqrt></mfrac><mo stretchy="false">)</mo><mi>V</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
+\end{aligned}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.748331em;vertical-align:-1.1241655em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6241655em;"><span style="top:-3.6241654999999997em;"><span class="pstrut" style="height:3.518331em;"></span><span class="mord"><span class="mord mathdefault">A</span><span class="mord mathdefault">t</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord mathdefault">n</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mopen">(</span><span class="mord mathdefault">Q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">t</span><span class="mord mathdefault">m</span><span class="mord mathdefault">a</span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5183309999999999em;"><span style="top:-2.25278em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85722em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.81722em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg width="400em" height="1.08em" viewbox="0 0 400000 1080" preserveaspectratio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.18278000000000005em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">Q</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.1241655em;"><span></span></span></span></span></span></span></span></span></span></span></span>
+  </li>
+  <li>We will use two different sets of Q,K and V matrices for sliding window and global attention.</li>
+  <li>$Q_g$, $K_g$, $V_g$ are initialized with $Q_s$, $K_s$, $V_s$</li>
+</ul>
+
+<p><img src="/blog/images/longformer/old_matrix.svg" alt="Banded Matrix"></p>
+<center><b>Banded Matrix(<a href="https://en.wikipedia.org/wiki/Band_matrix">Source</a>)</b></center>
+<p><img src="/blog/images/longformer/band_matrix.svg" alt="Compressed Banded Matrix"></p>
+<center><b>Compressed Banded Matrix(<a href="https://en.wikipedia.org/wiki/Band_matrix">Source</a>)</b></center>
+
+<h3 id="cuda-kernels">
+<a class="anchor" href="#cuda-kernels" aria-hidden="true"><span class="octicon octicon-link"></span></a>CUDA Kernels</h3>
+<ul>
+  <li>One of the important and interesting contributions of this paper is the implementation of matrix multiplication via CUDA kernels.</li>
+  <li>In the dilated sliding window, the matrix formed is called a <strong>band matrix</strong> i.e there are diagonal bands of indices that have values and the other values are 0.</li>
+  <li>Implementing matrix operations for band matrices using native for loops and via frameworks is not easy and optimized.</li>
+  <li>The authors have provided custom CUDA kernels implemented using <a href="https://github.com/apache/incubator-tvm">TVM</a> for this banded matrix operations.</li>
+  <li>As demonstrated in the image below, the custom CUDA kernels have a significant impact on the time and memory consumption of the model. The kernels and implementation for the longformer are available <a href="https://github.com/allenai/longformer">here</a>.
+<img src="/blog/images/longformer/performance.png" alt="Performance">
+</li>
+</ul>
+<center><b>LongFormer Performance</b></center>
+
+<h1 id="autoregressive-language-modelling">
+<a class="anchor" href="#autoregressive-language-modelling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Autoregressive Language Modelling</h1>
+
+<ul>
+  <li>Estimate the probability of a token given its previous tokens/characters in an input sequence.</li>
+  <li>It is a fundamental task in natural language and all previous work use this task as their primary evaluation measure.</li>
+</ul>
+
+<h2 id="attention-pattern">
+<a class="anchor" href="#attention-pattern" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attention Pattern</h2>
+<ul>
+  <li>In multi-head attention, each head computes a different score.</li>
+  <li>To get a good representation of all tokens, the authors propose that normal sliding window attention can be used for the lower layers, and dilated sliding window attention can be used the higher layers(top 1-2 layers).</li>
+  <li>The reasoning for this approach is that in the lower layers, the local context is more important, and in the upper layers, the global context is more important. Hence, it is acceptable to skip over a few tokens in the upper layers.</li>
+</ul>
+
+<h1 id="experimental-setup">
+<a class="anchor" href="#experimental-setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experimental Setup</h1>
+
+<h2 id="task-and-datasets">
+<a class="anchor" href="#task-and-datasets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task and Datasets</h2>
+<ul>
+  <li>The authors focus on character level modeling because the sequences are naturally longer than those of word-level language modeling.</li>
+  <li>Datasets that were used are <em>text8</em> and <em>enwik8</em>.</li>
+</ul>
+
+<h2 id="training-and-evaluation">
+<a class="anchor" href="#training-and-evaluation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Training and Evaluation</h2>
+<ul>
+  <li>The model was trained in multiple phases.
+    <ul>
+      <li>The window and sequence length was increased in each phase. This is to allow local context from tokens to be learned efficiently.</li>
+      <li>Overall five training phases used, starting from the token length of 2048 to 23040 (45x more than vanilla BERT).</li>
+      <li>Two models were created for evaluation:
+        <ul>
+          <li>Small model: 12 layers, 512 hidden size</li>
+          <li>Large model: 30 layers, 512 hidden sizes (2.5x larger)</li>
+        </ul>
+      </li>
+      <li>During the model evaluation, the model can run on a sequence length of 32256(63x more than vanilla BERT).</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="results">
+<a class="anchor" href="#results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Results</h2>
+
+<p><img src="/blog/images/longformer/results.png" alt="Results"></p>
+<ul>
+  <li>Longformer achieves SOTA using the small models with BPC of 1.10 and 1.00 for text8 and enwik8.</li>
+  <li>The large model was only tested on enwik8 due to the computational cost of training.</li>
+  <li>It’s also important to note that, while the large model did not achieve SOTA, it performs much better than it’s counterparts who have almost 2x more parameters.</li>
+</ul>
+
+<h1 id="pretraining-and-finetuning">
+<a class="anchor" href="#pretraining-and-finetuning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pretraining and Finetuning</h1>
+<ul>
+  <li>The LongFormer is trained to solve the tasks of classification, QA, and coreference resolution.</li>
+  <li>It is trained with MLM objective.</li>
+</ul>
+
+<h2 id="copy-initialization-trick">
+<a class="anchor" href="#copy-initialization-trick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copy initialization trick</h2>
+<ul>
+  <li>Since the MLM objective pretraining objective is expensive, the authors continue to train from the checkpoints of the <a href="https://arxiv.org/abs/1907.11692">RoBERTA</a> model.</li>
+  <li>The attention mechanism is replaced with the new attention module.</li>
+  <li>For the position embeddings:
+    <ul>
+      <li>RoBERTA has position embeddings for 512 tokens.</li>
+      <li>LongFormer can support position embeddings for 4096 tokens(larger for larger GPU)</li>
+      <li>To use the weight checkpoints from RoBERTA, instead of random initialization, copy the 512 position embeddings <strong>multiple times</strong> as analysis of the BERT attention heads showed a strong learned bias to attend to the local context.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="pretraining">
+<a class="anchor" href="#pretraining" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pretraining</h2>
+<ul>
+  <li>Apart from the datasets(Books corpus + English Wikipedia) used in RoBERTA, $\frac{1}{3}^{rd}$ Realnews dataset was added with tokens larger than 1200.</li>
+  <li>Both models(small and large) trained with varying gradient updates.</li>
+</ul>
+
+<p><img src="/blog/images/longformer/copy_init.png" alt="Copy init"></p>
+<center><b>MLM BPC for RoBERTA with various model config</b></center>
+
+<h1 id="task-specific-results">
+<a class="anchor" href="#task-specific-results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task-Specific Results</h1>
+
+<ul>
+  <li>Main results are summarized below:
+<img src="/blog/images/longformer/main_results.png" alt="Copy init">
+</li>
+</ul>
+<center><b>LongFormer Task Specific Results</b></center>
+<ul>
+  <li>The performance gain is high for tasks that require long contexts such as WikiHop and Hyperpartisan.</li>
+  <li>For TriviaQA, the improvement is small because the local context is often sufficient to answer the given question.</li>
+  <li>Similarly, gains in IMDB and OntoNotes are small(because of majority short reviews for IMDB and low distance between any two mentions for OntoNotes).</li>
+  <li>However, the LongFormer large model achieves SOTA on WikiHop and TriviaQA.</li>
+  <li>Using the large model also improves performance on HotpotQA.</li>
+</ul>
+
+<h1 id="conclusion">
+<a class="anchor" href="#conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion</h1>
+
+<ul>
+  <li>Overall, this was a fun read. The changes introduced in the attention mechanism are fairly simple but they yield very high-performance gains, paving the path to make these models useful in future applications.</li>
+  <li>Personally, and also as noted by the authors, I would like to see the performance of the LongFormer on the summarization task.</li>
+</ul>
+
+<h1 id="references">
+<a class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h1>
+<ul>
+  <li>Fantastic summary by Yannic Kilcher available <a href="https://www.youtube.com/watch?v=_8KNb5iqblE">here</a>.</li>
+  <li>LongFormer paper available <a href="https://arxiv.org/abs/2004.05150">here</a>
+</li>
+  <li>Dair.ai NLP newsletter available <a href="https://dair.ai/NLP_Newsletter_10_en/">here</a>
+</li>
+  <li>Open-sourced longformer code available <a href="https://github.com/allenai/longformer/">here</a>
+</li>
+</ul>
+
+
+  </div><a class="u-url" href="/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Shubham Gupta&#39;s blog</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/goodhamgupta" title="goodhamgupta"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/shubhamg2208" title="shubhamg2208"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

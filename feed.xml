@@ -1,4 +1,231 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://goodhamgupta.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://goodhamgupta.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-04-24T10:26:03-05:00</updated><id>https://goodhamgupta.github.io/blog/feed.xml</id><title type="html">Shubham Gupta</title><subtitle>Shubham Gupta's blog</subtitle><entry><title type="html">TagLM</title><link href="https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/23/tag-lm.html" rel="alternate" type="text/html" title="TagLM" /><published>2020-04-23T00:00:00-05:00</published><updated>2020-04-23T00:00:00-05:00</updated><id>https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/23/tag-lm</id><content type="html" xml:base="https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/23/tag-lm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://goodhamgupta.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://goodhamgupta.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-05-10T12:11:02-05:00</updated><id>https://goodhamgupta.github.io/blog/feed.xml</id><title type="html">Shubham Gupta</title><subtitle>Shubham Gupta's blog</subtitle><entry><title type="html">LongFormer</title><link href="https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html" rel="alternate" type="text/html" title="LongFormer" /><published>2020-05-11T00:00:00-05:00</published><updated>2020-05-11T00:00:00-05:00</updated><id>https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer</id><content type="html" xml:base="https://goodhamgupta.github.io/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The NLP world had its ImageNet moment with the introduction of the Transformer in the paper &lt;strong&gt;Attention is All you Need&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;The ability to be able to process multiple words/tokens in parallel and train models without labeled data(using self-attention) led to the creation of multiple models which gave us SOTA results on many interesting tasks such as Question Answering, Summarization, etc.&lt;/li&gt;
+  &lt;li&gt;However, the biggest drawback is the Transformer architecture is the limitation it has on the number of tokens it can process at a once, due to exponentially increasing memory and compute requirements(typically about 512 tokens), causing the performance to deteriorate over large documents.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2004.05150&quot;&gt;Longformer&lt;/a&gt; by the team at Allen AI aims to address this problem and demonstrate it’s application to do transfer learning for large documents.&lt;/li&gt;
+  &lt;li&gt;Other approaches to are described in recent work such as &lt;a href=&quot;https://arxiv.org/abs/1901.02860&quot;&gt;Transformer XL&lt;/a&gt;, &lt;a href=&quot;https://arxiv.org/abs/1911.02972&quot;&gt;Blockwise&lt;/a&gt;, &lt;a href=&quot;https://arxiv.org/abs/2001.04451&quot;&gt;Reformer&lt;/a&gt;, etc. Their characteristics are mentioned below:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/comparison.png&quot; alt=&quot;Comparison[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;key-contributions&quot;&gt;Key Contributions&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Transformers are expensive because of the massive matrix operations involved in the self-attention step. Since each token can attend to every other token in the given input, we get a runtime of $O(n^2)$, where $n$ is the sequence length(typically 512 tokens).&lt;/li&gt;
+  &lt;li&gt;LongFormer aims to solve this using a form of sparse attention and reducing the operational complexity to $O(n)$. They achieve this using the concept of the sliding window and dilated sliding window.&lt;/li&gt;
+  &lt;li&gt;The authors also show how this attention pattern can be modified (using dilation and global attention) on a per-task basis, thereby allowing us to use a single model for all tasks rather than creating task-specific architectures.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;attention-patterns&quot;&gt;Attention Patterns&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;The attention patterns implemented are as follows:
+&lt;img src=&quot;/blog/images/longformer/attention.png&quot; alt=&quot;Attention[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;sliding-window-attention&quot;&gt;Sliding Window Attention&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;TLDR&lt;/strong&gt; : Similar to kernels for CNN which apply a matrix operation to a set of pixels and move onto the next set, apply attention to tokens in current window &lt;em&gt;only&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;In this, we change the attention objective to only focus on the tokens that occur in a context window $w$.&lt;/li&gt;
+  &lt;li&gt;Each token will be able to attend to $\frac{1}{2}w$ number of tokens to it’s left and right.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Question&lt;/strong&gt;: But doesn’t this limit the number of tokens being taken into account to only the tokens in the window?
+    &lt;ul&gt;
+      &lt;li&gt;Yes, it does. This is why we stack multiple layers of self-attention. As shown in the image below, the green neuron learns from the first 3 tokens(Lionel, Messi, is). However, the brown neuron learns from the green, yellow, and red neuron, who together learn from the first 5 tokens. This way, we can apply attention to long sequences(Lionel, Messi, is, the, true).&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;As with the CNN, we will have $l$ layers to this sliding window attention(multi-head attention) implemented to learn low level and high-level features. A balance should be found between the number of layers $l$(efficiency) and the window size $w$(model representation capacity).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/sliding_window.png&quot; alt=&quot;Sliding Window Attention[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Pros&lt;/strong&gt;: Reduces computation from $O(n^2)$ to $O(n*w)$ i.e the computation complexity will only scale linearly now.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Cons&lt;/strong&gt;: To learn dependencies for a large sequence, we would either have to increase the window size $w$ or increase the number of layers $l$, both of which will cause an increase in the amount of memory and processing power required to train and test the model.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;dilated-sliding-window&quot;&gt;Dilated Sliding Window&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;TLDR&lt;/strong&gt;: Use dilation instead of window attention i.e for some particular window size, take alternate elements while performing self-attention.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;To solve the problem for long sequences, the authors propose that instead of considering all tokens in window $w$, consider alternate(or any number $d$)tokens instead. The range of tokens will now be $l * d * w$, which will be large for even a small value of $d$.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Pros&lt;/strong&gt;: This small change will allow us to cover a wider range of tokens without significant changes to the architecture.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Cons&lt;/strong&gt;: Skipping tokens might lead to loss of information in the lower layers which will get propagated to the higher layers. This will lead to unstable training and poor model performance.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;global-attention&quot;&gt;Global Attention&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;TLDR&lt;/strong&gt;: Use full attention for certain tokens depending on the task. This is an engineering choice.&lt;/li&gt;
+  &lt;li&gt;In BERT style models, optimal representation for input sequence varies by task.
+    &lt;ul&gt;
+      &lt;li&gt;For MLM, local context is used to predict the masked word&lt;/li&gt;
+      &lt;li&gt;For classification, [CLS] token is used.&lt;/li&gt;
+      &lt;li&gt;For QnA, the question is concatenated with the document to help model learn through self-attention.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;The windowed and dilated attention is not flexible enough to learn task-specific representations.&lt;/li&gt;
+  &lt;li&gt;Hence, for some tokens enable global tokens i.e at these tokens, all tokens in the sequence can attend to it. For classification, enable global attention on the [CLS] token.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Pros&lt;/strong&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;Adding global attention improves performance for specific tasks. Since these tokens are limited in number, the complexity still stays at $O(n)$.&lt;/li&gt;
+      &lt;li&gt;It also increases the representational power of the model.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;linear-projections&quot;&gt;Linear Projections&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;TLDR&lt;/strong&gt;: Use two sets of Q,K and V matrices, one for sliding window attention, one for global attention.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Attention is defined as:&lt;/p&gt;
+
+    &lt;span class=&quot;katex-display&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mtable rowspacing=&quot;0.24999999999999992em&quot; columnalign=&quot;right&quot; columnspacing=&quot;&quot;&gt;&lt;mtr&gt;&lt;mtd&gt;&lt;mstyle scriptlevel=&quot;0&quot; displaystyle=&quot;true&quot;&gt;&lt;mrow&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mi&gt;e&lt;/mi&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mi&gt;o&lt;/mi&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;mo separator=&quot;true&quot;&gt;,&lt;/mo&gt;&lt;mi&gt;K&lt;/mi&gt;&lt;mo separator=&quot;true&quot;&gt;,&lt;/mo&gt;&lt;mi&gt;V&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;mi&gt;o&lt;/mi&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mi&gt;m&lt;/mi&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mfrac&gt;&lt;mrow&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;msup&gt;&lt;mi&gt;K&lt;/mi&gt;&lt;mi&gt;T&lt;/mi&gt;&lt;/msup&gt;&lt;/mrow&gt;&lt;msqrt&gt;&lt;msub&gt;&lt;mi&gt;d&lt;/mi&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;/msub&gt;&lt;/msqrt&gt;&lt;/mfrac&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mi&gt;V&lt;/mi&gt;&lt;/mrow&gt;&lt;/mstyle&gt;&lt;/mtd&gt;&lt;/mtr&gt;&lt;/mtable&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\begin{aligned}
+Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
+\end{aligned}&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:2.748331em;vertical-align:-1.1241655em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mtable&quot;&gt;&lt;span class=&quot;col-align-r&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:1.6241655em;&quot;&gt;&lt;span style=&quot;top:-3.6241654999999997em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3.518331em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.07153em;&quot;&gt;K&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.22222em;&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.10764em;&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mopen nulldelimiter&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mfrac&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:1.5183309999999999em;&quot;&gt;&lt;span style=&quot;top:-2.25278em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mord sqrt&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.85722em;&quot;&gt;&lt;span class=&quot;svg-align&quot; style=&quot;top:-3em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot; style=&quot;padding-left:0.833em;&quot;&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;msupsub&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.33610799999999996em;&quot;&gt;&lt;span style=&quot;top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:2.7em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;sizing reset-size6 size3 mtight&quot;&gt;&lt;span class=&quot;mord mathdefault mtight&quot; style=&quot;margin-right:0.03148em;&quot;&gt;k&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.15em;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;top:-2.81722em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;hide-tail&quot; style=&quot;min-width:0.853em;height:1.08em;&quot;&gt;&lt;svg width='400em' height='1.08em' viewBox='0 0 400000 1080' preserveAspectRatio='xMinYMin slice'&gt;&lt;path d='M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z'/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.18278000000000005em;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;top:-3.23em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;frac-line&quot; style=&quot;border-bottom-width:0.04em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;top:-3.677em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.07153em;&quot;&gt;K&lt;/span&gt;&lt;span class=&quot;msupsub&quot;&gt;&lt;span class=&quot;vlist-t&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.8413309999999999em;&quot;&gt;&lt;span style=&quot;top:-3.063em;margin-right:0.05em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:2.7em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;sizing reset-size6 size3 mtight&quot;&gt;&lt;span class=&quot;mord mathdefault mtight&quot; style=&quot;margin-right:0.13889em;&quot;&gt;T&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.93em;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mclose nulldelimiter&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.22222em;&quot;&gt;V&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:1.1241655em;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
+  &lt;/li&gt;
+  &lt;li&gt;We will use two different sets of Q,K and V matrices for sliding window and global attention.&lt;/li&gt;
+  &lt;li&gt;$Q_g$, $K_g$, $V_g$ are initialized with $Q_s$, $K_s$, $V_s$&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/old_matrix.svg&quot; alt=&quot;Banded Matrix&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;&lt;b&gt;Banded Matrix(&lt;a href=&quot;https://en.wikipedia.org/wiki/Band_matrix&quot;&gt;Source&lt;/a&gt;)&lt;/b&gt;&lt;/center&gt;
+&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/band_matrix.svg&quot; alt=&quot;Compressed Banded Matrix&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;&lt;b&gt;Compressed Banded Matrix(&lt;a href=&quot;https://en.wikipedia.org/wiki/Band_matrix&quot;&gt;Source&lt;/a&gt;)&lt;/b&gt;&lt;/center&gt;
+
+&lt;h3 id=&quot;cuda-kernels&quot;&gt;CUDA Kernels&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;One of the important and interesting contributions of this paper is the implementation of matrix multiplication via CUDA kernels.&lt;/li&gt;
+  &lt;li&gt;In the dilated sliding window, the matrix formed is called a &lt;strong&gt;band matrix&lt;/strong&gt; i.e there are diagonal bands of indices that have values and the other values are 0.&lt;/li&gt;
+  &lt;li&gt;Implementing matrix operations for band matrices using native for loops and via frameworks is not easy and optimized.&lt;/li&gt;
+  &lt;li&gt;The authors have provided custom CUDA kernels implemented using &lt;a href=&quot;https://github.com/apache/incubator-tvm&quot;&gt;TVM&lt;/a&gt; for this banded matrix operations.&lt;/li&gt;
+  &lt;li&gt;As demonstrated in the image below, the custom CUDA kernels have a significant impact on the time and memory consumption of the model. The kernels and implementation for the longformer are available &lt;a href=&quot;https://github.com/allenai/longformer&quot;&gt;here&lt;/a&gt;.
+&lt;img src=&quot;/blog/images/longformer/performance.png&quot; alt=&quot;Performance&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;center&gt;&lt;b&gt;LongFormer Performance&lt;/b&gt;&lt;/center&gt;
+
+&lt;h1 id=&quot;autoregressive-language-modelling&quot;&gt;Autoregressive Language Modelling&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Estimate the probability of a token given its previous tokens/characters in an input sequence.&lt;/li&gt;
+  &lt;li&gt;It is a fundamental task in natural language and all previous work use this task as their primary evaluation measure.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;attention-pattern&quot;&gt;Attention Pattern&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;In multi-head attention, each head computes a different score.&lt;/li&gt;
+  &lt;li&gt;To get a good representation of all tokens, the authors propose that normal sliding window attention can be used for the lower layers, and dilated sliding window attention can be used the higher layers(top 1-2 layers).&lt;/li&gt;
+  &lt;li&gt;The reasoning for this approach is that in the lower layers, the local context is more important, and in the upper layers, the global context is more important. Hence, it is acceptable to skip over a few tokens in the upper layers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;experimental-setup&quot;&gt;Experimental Setup&lt;/h1&gt;
+
+&lt;h2 id=&quot;task-and-datasets&quot;&gt;Task and Datasets&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;The authors focus on character level modeling because the sequences are naturally longer than those of word-level language modeling.&lt;/li&gt;
+  &lt;li&gt;Datasets that were used are &lt;em&gt;text8&lt;/em&gt; and &lt;em&gt;enwik8&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;training-and-evaluation&quot;&gt;Training and Evaluation&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;The model was trained in multiple phases.
+    &lt;ul&gt;
+      &lt;li&gt;The window and sequence length was increased in each phase. This is to allow local context from tokens to be learned efficiently.&lt;/li&gt;
+      &lt;li&gt;Overall five training phases used, starting from the token length of 2048 to 23040 (45x more than vanilla BERT).&lt;/li&gt;
+      &lt;li&gt;Two models were created for evaluation:
+        &lt;ul&gt;
+          &lt;li&gt;Small model: 12 layers, 512 hidden size&lt;/li&gt;
+          &lt;li&gt;Large model: 30 layers, 512 hidden sizes (2.5x larger)&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;During the model evaluation, the model can run on a sequence length of 32256(63x more than vanilla BERT).&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/results.png&quot; alt=&quot;Results&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Longformer achieves SOTA using the small models with BPC of 1.10 and 1.00 for text8 and enwik8.&lt;/li&gt;
+  &lt;li&gt;The large model was only tested on enwik8 due to the computational cost of training.&lt;/li&gt;
+  &lt;li&gt;It’s also important to note that, while the large model did not achieve SOTA, it performs much better than it’s counterparts who have almost 2x more parameters.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;pretraining-and-finetuning&quot;&gt;Pretraining and Finetuning&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;The LongFormer is trained to solve the tasks of classification, QA, and coreference resolution.&lt;/li&gt;
+  &lt;li&gt;It is trained with MLM objective.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;copy-initialization-trick&quot;&gt;Copy initialization trick&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Since the MLM objective pretraining objective is expensive, the authors continue to train from the checkpoints of the &lt;a href=&quot;https://arxiv.org/abs/1907.11692&quot;&gt;RoBERTA&lt;/a&gt; model.&lt;/li&gt;
+  &lt;li&gt;The attention mechanism is replaced with the new attention module.&lt;/li&gt;
+  &lt;li&gt;For the position embeddings:
+    &lt;ul&gt;
+      &lt;li&gt;RoBERTA has position embeddings for 512 tokens.&lt;/li&gt;
+      &lt;li&gt;LongFormer can support position embeddings for 4096 tokens(larger for larger GPU)&lt;/li&gt;
+      &lt;li&gt;To use the weight checkpoints from RoBERTA, instead of random initialization, copy the 512 position embeddings &lt;strong&gt;multiple times&lt;/strong&gt; as analysis of the BERT attention heads showed a strong learned bias to attend to the local context.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;pretraining&quot;&gt;Pretraining&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Apart from the datasets(Books corpus + English Wikipedia) used in RoBERTA, $\frac{1}{3}^{rd}$ Realnews dataset was added with tokens larger than 1200.&lt;/li&gt;
+  &lt;li&gt;Both models(small and large) trained with varying gradient updates.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/copy_init.png&quot; alt=&quot;Copy init&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;&lt;b&gt;MLM BPC for RoBERTA with various model config&lt;/b&gt;&lt;/center&gt;
+
+&lt;h1 id=&quot;task-specific-results&quot;&gt;Task-Specific Results&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Main results are summarized below:
+&lt;img src=&quot;/blog/images/longformer/main_results.png&quot; alt=&quot;Copy init&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;center&gt;&lt;b&gt;LongFormer Task Specific Results&lt;/b&gt;&lt;/center&gt;
+&lt;ul&gt;
+  &lt;li&gt;The performance gain is high for tasks that require long contexts such as WikiHop and Hyperpartisan.&lt;/li&gt;
+  &lt;li&gt;For TriviaQA, the improvement is small because the local context is often sufficient to answer the given question.&lt;/li&gt;
+  &lt;li&gt;Similarly, gains in IMDB and OntoNotes are small(because of majority short reviews for IMDB and low distance between any two mentions for OntoNotes).&lt;/li&gt;
+  &lt;li&gt;However, the LongFormer large model achieves SOTA on WikiHop and TriviaQA.&lt;/li&gt;
+  &lt;li&gt;Using the large model also improves performance on HotpotQA.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Overall, this was a fun read. The changes introduced in the attention mechanism are fairly simple but they yield very high-performance gains, paving the path to make these models useful in future applications.&lt;/li&gt;
+  &lt;li&gt;Personally, and also as noted by the authors, I would like to see the performance of the LongFormer on the summarization task.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fantastic summary by Yannic Kilcher available &lt;a href=&quot;https://www.youtube.com/watch?v=_8KNb5iqblE&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;LongFormer paper available &lt;a href=&quot;https://arxiv.org/abs/2004.05150&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Dair.ai NLP newsletter available &lt;a href=&quot;https://dair.ai/NLP_Newsletter_10_en/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Open-sourced longformer code available &lt;a href=&quot;https://github.com/allenai/longformer/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://goodhamgupta.github.io/blog/images/longformer/training.png" /><media:content medium="image" url="https://goodhamgupta.github.io/blog/images/longformer/training.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">TagLM</title><link href="https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/23/tag-lm.html" rel="alternate" type="text/html" title="TagLM" /><published>2020-04-23T00:00:00-05:00</published><updated>2020-04-23T00:00:00-05:00</updated><id>https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/23/tag-lm</id><content type="html" xml:base="https://goodhamgupta.github.io/blog/nlp/language_model/review/2020/04/23/tag-lm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -103,8 +330,7 @@ forward-backward algorithm.&lt;/p&gt;
   &lt;li&gt;
     &lt;p&gt;Use Viterbi algorithm to find most likely sequence&lt;/p&gt;
 
-    &lt;p&gt;&lt;img src=&quot;/blog/images/taglm/overview.png&quot; alt=&quot;Overview of
-architecture[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;img src=&quot;/blog/images/taglm/overview.png&quot; alt=&quot;Overview of architecture[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;LM embedding will be created by concatenating forward and backward
