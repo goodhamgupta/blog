@@ -140,7 +140,7 @@ title: LongFormer
 ![Copy init]({{site.baseurl}}/images/longformer/copy_init.png)
 <center><b>MLM BPC for RoBERTA with various model config</b></center>
 
-# Results
+# Task-Specific Results
 
 - Main results are summarized below:
 ![Copy init]({{site.baseurl}}/images/longformer/main_results.png)
