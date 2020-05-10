@@ -50,13 +50,84 @@ title: LongFormer
 - **Pros**: This small change will allow us to cover a wider range of tokens without significant changes to the architecture.
 - **Cons**: Skipping tokens might lead to loss of information in the lower layers which will get propagated to the higher layers. This will lead to unstable training and poor model performance.
 
-## Best of both worlds!
+## Global Attention
+- **TLDR**: Use full attention for certain tokens depending on the task. This is an engineering choice.
+- In BERT style models, optimal representation for input sequence varies by task.
+  - For MLM, local context is used to predict the masked word
+  - For classification, [CLS] token is used.
+  - For QnA, question is concated with document to help model learn through self attention.
+- The windowed and dilated attention are not flexible enough to learn task specific representations.
+- Hence, for some tokens enable global tokens i.e at these tokens, all tokens in the sequence can attend to it. For classifcation, enable global attention on the [CLS] token.
+- **Pros**: 
+  - Adding global attention improves performance for specific tasks. Since these tokens are limited in number, the complexity still stays at $O(n)$. 
+  - It also increases representational power of the model.
+
+### Linear Projections
+
+- **TLDR**: Use two sets of Q,K and V matrices, one for sliding window attention, one for global attention.
+- Attention is defined as:
+
+  $$
+  \begin{aligned}
+  Attention(Q,K,V) = softmax(\frac{QK^T}{\sqrt{d_k}})V
+  \end{aligned}
+  $$
+- We will use two different sets of Q,K and V matrices for sliding window and global attention. 
+- $Q_g$, $K_g$, $V_g$ are initialized with $Q_s$, $K_s$, $V_s$
+
+![Banded Matrix]({{site.baseurl}}/images/longformer/old_matrix.svg)
+<center><b>Banded Matrix(<a href="https://en.wikipedia.org/wiki/Band_matrix">Source</a>)</b></center>
+![Compressed Banded Matrix]({{site.baseurl}}/images/longformer/band_matrix.svg)
+<center><b>Compressed Banded Matrix(<a href="https://en.wikipedia.org/wiki/Band_matrix">Source</a>)</b></center>
+
+### CUDA Kernels
+- One of the important and interesting contributions of this paper is the implementation of matrix multiplication via CUDA kernels.
+- In dilated sliding window, the matrix formed is called a **band matrix** i.e there are diagonal bands of indices that have values and the other values are 0.
+- Implementing matrix operations for band matrices using native for loops and via frameworks is not easy and optimized.
+- The authors have provided custom CUDA kernels implemented using [TVM](https://github.com/apache/incubator-tvm) for this banded matrix operations.
+- As demonstrated in the image below, the custom CUDA kernels have a significant impact on the time and memory consumption of the model. The kernels and implementation for the longformer is available [here](https://github.com/allenai/longformer).
+![Performance]({{site.baseurl}}/images/longformer/performance.png)
+<center><b>LongFormer Performance</b></center>
+
+# Autoregressive Language Modelling
+
+- Estimate the probability of a token given it's previous tokens/characters in a input sequence.
+- It is a fundamental task in natural language and all prevous work use this task as their primary evaluation measure.
+
+## Attention Pattern
 - In multi-head attention, each head computes a different score.
 - To get a good representation of all tokens, the authors propose that normal sliding window attention can be used for the lower layers, and dilated sliding window attention can be used the higher layers(top 1-2 layers).
 - The reasoning for this approach is that in the lower layers, the local context is more important, and in the upper layers, the global context is more important. Hence, it is acceptable to skip over a few tokens in the upper layers.
 
-## Global sliding window attention
+# Experimental Setup
 
+## Task and Datasets
+- The authors focus on character level modelling because the sequences are naturally longer than those of word level language modelling.
+- Datasets that were used are _text8_ and _enwik8_.
+
+## Training and Evaluation
+- The model was trained in multiple phases.
+  - The window and sequence length was increased in each phase. This is to allow local context from tokens to be learnt efficiently.
+  - Overall five training phases used, starting from token length of 2048 to 23040 (45x more than vanilla BERT).
+  - Two models were created for evaluation:
+    - Small model: 12 layers, 512 hidden size 
+    - Large model: 30 layers, 512 hidden size (2.5x larger)
+  - During model evaluation, the model is able to run on a sequence length of 32256(63x more than vanilla BERT).
+
+## Results
+![Results]({{site.baseurl}}/images/longformer/results.png)
+- Longformer acheives SOTA using the small models with BPC of 1.10 and 1.00 for text8 and enwik8.
+- The large model was only tested on enwik8 due to the computational cost of training.
+- It's also important to note that, while the large model did not acheive SOTA, it performs much better that it's counterparts who have almost 2x more parameters.
+
+# Pretraining and Finetuning
+- The LongFormer is trained to solve the tasks of classification, QA and coreference resolution.
+- It is trained with MLM objective.
+
+## Copy trick
+- Since the MLM objective pretraining objective is expensive, the authors continue to train from the checkpoints of the [RoBERTA](https://arxiv.org/abs/1907.11692) model.
+- The attention mechanism is replaced with the new attention module.
+- 
 
 # Notes 
 
