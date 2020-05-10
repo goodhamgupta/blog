@@ -55,12 +55,12 @@ title: LongFormer
 - In BERT style models, optimal representation for input sequence varies by task.
   - For MLM, local context is used to predict the masked word
   - For classification, [CLS] token is used.
-  - For QnA, question is concated with document to help model learn through self attention.
-- The windowed and dilated attention are not flexible enough to learn task specific representations.
-- Hence, for some tokens enable global tokens i.e at these tokens, all tokens in the sequence can attend to it. For classifcation, enable global attention on the [CLS] token.
+  - For QnA, the question is concatenated with the document to help model learn through self-attention.
+- The windowed and dilated attention is not flexible enough to learn task-specific representations.
+- Hence, for some tokens enable global tokens i.e at these tokens, all tokens in the sequence can attend to it. For classification, enable global attention on the [CLS] token.
 - **Pros**: 
   - Adding global attention improves performance for specific tasks. Since these tokens are limited in number, the complexity still stays at $O(n)$. 
-  - It also increases representational power of the model.
+  - It also increases the representational power of the model.
 
 ### Linear Projections
 
@@ -82,17 +82,17 @@ title: LongFormer
 
 ### CUDA Kernels
 - One of the important and interesting contributions of this paper is the implementation of matrix multiplication via CUDA kernels.
-- In dilated sliding window, the matrix formed is called a **band matrix** i.e there are diagonal bands of indices that have values and the other values are 0.
+- In the dilated sliding window, the matrix formed is called a **band matrix** i.e there are diagonal bands of indices that have values and the other values are 0.
 - Implementing matrix operations for band matrices using native for loops and via frameworks is not easy and optimized.
 - The authors have provided custom CUDA kernels implemented using [TVM](https://github.com/apache/incubator-tvm) for this banded matrix operations.
-- As demonstrated in the image below, the custom CUDA kernels have a significant impact on the time and memory consumption of the model. The kernels and implementation for the longformer is available [here](https://github.com/allenai/longformer).
+- As demonstrated in the image below, the custom CUDA kernels have a significant impact on the time and memory consumption of the model. The kernels and implementation for the longformer are available [here](https://github.com/allenai/longformer).
 ![Performance]({{site.baseurl}}/images/longformer/performance.png)
 <center><b>LongFormer Performance</b></center>
 
 # Autoregressive Language Modelling
 
-- Estimate the probability of a token given it's previous tokens/characters in a input sequence.
-- It is a fundamental task in natural language and all prevous work use this task as their primary evaluation measure.
+- Estimate the probability of a token given its previous tokens/characters in an input sequence.
+- It is a fundamental task in natural language and all previous work use this task as their primary evaluation measure.
 
 ## Attention Pattern
 - In multi-head attention, each head computes a different score.
@@ -102,45 +102,56 @@ title: LongFormer
 # Experimental Setup
 
 ## Task and Datasets
-- The authors focus on character level modelling because the sequences are naturally longer than those of word level language modelling.
+- The authors focus on character level modeling because the sequences are naturally longer than those of word-level language modeling.
 - Datasets that were used are _text8_ and _enwik8_.
 
 ## Training and Evaluation
 - The model was trained in multiple phases.
-  - The window and sequence length was increased in each phase. This is to allow local context from tokens to be learnt efficiently.
-  - Overall five training phases used, starting from token length of 2048 to 23040 (45x more than vanilla BERT).
+  - The window and sequence length was increased in each phase. This is to allow local context from tokens to be learned efficiently.
+  - Overall five training phases used, starting from the token length of 2048 to 23040 (45x more than vanilla BERT).
   - Two models were created for evaluation:
     - Small model: 12 layers, 512 hidden size 
-    - Large model: 30 layers, 512 hidden size (2.5x larger)
-  - During model evaluation, the model is able to run on a sequence length of 32256(63x more than vanilla BERT).
+    - Large model: 30 layers, 512 hidden sizes (2.5x larger)
+  - During the model evaluation, the model can run on a sequence length of 32256(63x more than vanilla BERT).
 
 ## Results
+
 ![Results]({{site.baseurl}}/images/longformer/results.png)
-- Longformer acheives SOTA using the small models with BPC of 1.10 and 1.00 for text8 and enwik8.
+- Longformer achieves SOTA using the small models with BPC of 1.10 and 1.00 for text8 and enwik8.
 - The large model was only tested on enwik8 due to the computational cost of training.
-- It's also important to note that, while the large model did not acheive SOTA, it performs much better that it's counterparts who have almost 2x more parameters.
+- It's also important to note that, while the large model did not achieve SOTA, it performs much better than it's counterparts who have almost 2x more parameters.
 
 # Pretraining and Finetuning
-- The LongFormer is trained to solve the tasks of classification, QA and coreference resolution.
+- The LongFormer is trained to solve the tasks of classification, QA, and coreference resolution.
 - It is trained with MLM objective.
 
-## Copy trick
+## Copy initialization trick
 - Since the MLM objective pretraining objective is expensive, the authors continue to train from the checkpoints of the [RoBERTA](https://arxiv.org/abs/1907.11692) model.
 - The attention mechanism is replaced with the new attention module.
-- 
+- For the position embeddings:
+  - RoBERTA has position embeddings for 512 tokens.
+  - LongFormer can support position embeddings for 4096 tokens(larger for larger GPU)
+  - To use the weight checkpoints from RoBERTA, instead of random initialization, copy the 512 position embeddings **multiple times** as analysis of the BERT attention heads showed a strong learned bias to attend to the local context.
 
-# Notes 
+## Pretraining
+- Apart from the datasets(Books corpus + English Wikipedia) used in RoBERTA, $\frac{1}{3}^{rd}$ Realnews dataset was added with tokens larger than 1200.
+- Both models(small and large) trained with varying gradient updates.
 
-- Longformer is a paper by Allen AI which was referenced in DAIR's nlp newsletter(available [here](https://dair.ai/NLP_Newsletter_10_en/))
-- It aims to solve the limitation of the number of tokens that can be processed simultaneously in the transformer architecture.
-- Use CNN principle. Use kernel and sliding technique to reduce the memory comsumption. Memory reduced to _d*k_
-- Longformer does for transformer what CNN does for MLP.
-- **Dilated Sliding Window**: Sliding window might take lot of layers to accomodate all information. TLDR: Dilated sliding window is a skip one toke type appraoch. Instead of attending all nearby tokens, it will attend to alternate tokens. LARGER window size => Faster information aggregation
-- Use combo of both sliding window and dilated sliding window attention
-  - In lower layers, use sliding window. Reasoning is that in the start local context is more important.
-  - In higher layers, use dilated window. Reasoning is that in the end global context is more important.
+![Copy init]({{site.baseurl}}/images/longformer/copy_init.png)
+<center><b>MLM BPC for RoBERTA with various model config</b></center>
 
-- Global attention: Sparse. Special units. Basically, they can attend to anything, similar to classic self-attention in transformer. Reasoning: Sometimes needed. Engineering choice. Eg: In question answering task for yes/no, use the [CLS] token for classification. Hence, all [CLS] tokens will be special units with full self-attention
+# Results
 
-- They can copy output from roberta because they use window size of 512. Such a clever hack!! This helps them reduce training time as well.
+- Main results are summarized below:
+![Copy init]({{site.baseurl}}/images/longformer/main_results.png)
+<center><b>LongFormer Task Specific Results</b></center>
+- The performance gain is high for tasks that require long contexts such as WikiHop and Hyperpartisan.
+- For TriviaQA, the improvement is small because the local context is often sufficient to answer the given question.
+- Similarly, gains in IMDB and OntoNotes are small(because of majority short reviews for IMDB and low distance between any two mentions for OntoNotes).
+- However, the LongFormer large model achieves SOTA on WikiHop and TriviaQA.
+- Using the large model also improves performance on HotpotQA.
 
+# Conclusion
+
+- Overall, this was a fun read. The changes introduced in the attention mechanism are fairly simple but they yield very high-performance gains, paving the path to make these models useful in future applications.
+- Personally, and also as noted by the authors, I would like to see the performance of the LongFormer on the summarization task. 
