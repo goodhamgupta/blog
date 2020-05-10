@@ -11,10 +11,10 @@ title: LongFormer
 # Introduction
 
 - The NLP world had its ImageNet moment with the introduction of the Transformer in the paper **Attention is All you Need**. 
-- The ability to be able to process multiple words/tokens in parallel and train models without labeled data(using self-attention) led to the creation of multiple models which gave us SOTA results on many interesting tasks such as Question Answering, Summarization, etc. -
+- The ability to be able to process multiple words/tokens in parallel and train models without labeled data(using self-attention) led to the creation of multiple models which gave us SOTA results on many interesting tasks such as Question Answering, Summarization, etc.
 - However, the biggest drawback is the Transformer architecture is the limitation it has on the number of tokens it can process at a once, due to exponentially increasing memory and compute requirements(typically about 512 tokens), causing the performance to deteriorate over large documents. 
 - [Longformer](https://arxiv.org/abs/2004.05150) by the team at Allen AI aims to address this problem and demonstrate it's application to do transfer learning for large documents.
-- Other approaches to are described in recent work such as [Transformer XL](link), [Blockwise](link), [Reformer](link), etc. Their characteristics are mentioned below:
+- Other approaches to are described in recent work such as [Transformer XL](https://arxiv.org/abs/1901.02860), [Blockwise](https://arxiv.org/abs/1911.02972), [Reformer](https://arxiv.org/abs/2001.04451), etc. Their characteristics are mentioned below:
 
 ![Comparison[]{data-label="fig:overview"}]({{site.baseurl}}/images/longformer/comparison.png)
 
@@ -155,3 +155,10 @@ title: LongFormer
 
 - Overall, this was a fun read. The changes introduced in the attention mechanism are fairly simple but they yield very high-performance gains, paving the path to make these models useful in future applications.
 - Personally, and also as noted by the authors, I would like to see the performance of the LongFormer on the summarization task. 
+
+# References
+- Fantastic summary by Yannic Kilcher available [here](https://www.youtube.com/watch?v=_8KNb5iqblE).
+- LongFormer paper available [here](https://arxiv.org/abs/2004.05150)
+- Dair.ai NLP newsletter available [here](https://dair.ai/NLP_Newsletter_10_en/)
+- Open-sourced longformer code available [here](https://github.com/allenai/longformer/)
+
