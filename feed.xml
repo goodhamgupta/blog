@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://shubhamg.in/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://shubhamg.in/blog/" rel="alternate" type="text/html" /><updated>2020-05-28T13:36:55-05:00</updated><id>https://shubhamg.in/blog/feed.xml</id><title type="html">Shubham Gupta</title><subtitle>Shubham Gupta's blog</subtitle><entry><title type="html">LongFormer</title><link href="https://shubhamg.in/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html" rel="alternate" type="text/html" title="LongFormer" /><published>2020-05-11T00:00:00-05:00</published><updated>2020-05-11T00:00:00-05:00</updated><id>https://shubhamg.in/blog/nlp/transformer/review/longformer/2020/05/11/longformer</id><content type="html" xml:base="https://shubhamg.in/blog/nlp/transformer/review/longformer/2020/05/11/longformer.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://shubhamg.in/feed.xml" rel="self" type="application/atom+xml" /><link href="https://shubhamg.in/" rel="alternate" type="text/html" /><updated>2020-05-28T13:49:18-05:00</updated><id>https://shubhamg.in/feed.xml</id><title type="html">Shubham Gupta</title><subtitle>Shubham Gupta's blog</subtitle><entry><title type="html">LongFormer</title><link href="https://shubhamg.in/nlp/transformer/review/longformer/2020/05/11/longformer.html" rel="alternate" type="text/html" title="LongFormer" /><published>2020-05-11T00:00:00-05:00</published><updated>2020-05-11T00:00:00-05:00</updated><id>https://shubhamg.in/nlp/transformer/review/longformer/2020/05/11/longformer</id><content type="html" xml:base="https://shubhamg.in/nlp/transformer/review/longformer/2020/05/11/longformer.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;The NLP world had its ImageNet moment with the introduction of the Transformer in the paper &lt;strong&gt;Attention is All you Need&lt;/strong&gt;.&lt;/li&gt;
@@ -8,7 +8,7 @@
   &lt;li&gt;Other approaches to are described in recent work such as &lt;a href=&quot;https://arxiv.org/abs/1901.02860&quot;&gt;Transformer XL&lt;/a&gt;, &lt;a href=&quot;https://arxiv.org/abs/1911.02972&quot;&gt;Blockwise&lt;/a&gt;, &lt;a href=&quot;https://arxiv.org/abs/2001.04451&quot;&gt;Reformer&lt;/a&gt;, etc. Their characteristics are mentioned below:&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/comparison.png&quot; alt=&quot;Comparison[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/longformer/comparison.png&quot; alt=&quot;Comparison[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;key-contributions&quot;&gt;Key Contributions&lt;/h1&gt;
 
@@ -21,7 +21,7 @@
 &lt;h1 id=&quot;attention-patterns&quot;&gt;Attention Patterns&lt;/h1&gt;
 &lt;ul&gt;
   &lt;li&gt;The attention patterns implemented are as follows:
-&lt;img src=&quot;/blog/images/longformer/attention.png&quot; alt=&quot;Attention[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/li&gt;
+&lt;img src=&quot;/images/longformer/attention.png&quot; alt=&quot;Attention[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;sliding-window-attention&quot;&gt;Sliding Window Attention&lt;/h2&gt;
@@ -38,7 +38,7 @@
   &lt;li&gt;As with the CNN, we will have $l$ layers to this sliding window attention(multi-head attention) implemented to learn low level and high-level features. A balance should be found between the number of layers $l$(efficiency) and the window size $w$(model representation capacity).&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/sliding_window.png&quot; alt=&quot;Sliding Window Attention[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/longformer/sliding_window.png&quot; alt=&quot;Sliding Window Attention[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -105,9 +105,9 @@ M834 80h400000v40h-400000z'/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&
   &lt;li&gt;$Q_g$, $K_g$, $V_g$ are initialized with $Q_s$, $K_s$, $V_s$&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/old_matrix.svg&quot; alt=&quot;Banded Matrix&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/longformer/old_matrix.svg&quot; alt=&quot;Banded Matrix&quot; /&gt;&lt;/p&gt;
 &lt;center&gt;&lt;b&gt;Banded Matrix(&lt;a href=&quot;https://en.wikipedia.org/wiki/Band_matrix&quot;&gt;Source&lt;/a&gt;)&lt;/b&gt;&lt;/center&gt;
-&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/band_matrix.svg&quot; alt=&quot;Compressed Banded Matrix&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/longformer/band_matrix.svg&quot; alt=&quot;Compressed Banded Matrix&quot; /&gt;&lt;/p&gt;
 &lt;center&gt;&lt;b&gt;Compressed Banded Matrix(&lt;a href=&quot;https://en.wikipedia.org/wiki/Band_matrix&quot;&gt;Source&lt;/a&gt;)&lt;/b&gt;&lt;/center&gt;
 
 &lt;h3 id=&quot;cuda-kernels&quot;&gt;CUDA Kernels&lt;/h3&gt;
@@ -117,7 +117,7 @@ M834 80h400000v40h-400000z'/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&
   &lt;li&gt;Implementing matrix operations for band matrices using native for loops and via frameworks is not easy and optimized.&lt;/li&gt;
   &lt;li&gt;The authors have provided custom CUDA kernels implemented using &lt;a href=&quot;https://github.com/apache/incubator-tvm&quot;&gt;TVM&lt;/a&gt; for this banded matrix operations.&lt;/li&gt;
   &lt;li&gt;As demonstrated in the image below, the custom CUDA kernels have a significant impact on the time and memory consumption of the model. The kernels and implementation for the longformer are available &lt;a href=&quot;https://github.com/allenai/longformer&quot;&gt;here&lt;/a&gt;.
-&lt;img src=&quot;/blog/images/longformer/performance.png&quot; alt=&quot;Performance&quot; /&gt;&lt;/li&gt;
+&lt;img src=&quot;/images/longformer/performance.png&quot; alt=&quot;Performance&quot; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;center&gt;&lt;b&gt;LongFormer Performance&lt;/b&gt;&lt;/center&gt;
 
@@ -162,7 +162,7 @@ M834 80h400000v40h-400000z'/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&
 
 &lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/results.png&quot; alt=&quot;Results&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/longformer/results.png&quot; alt=&quot;Results&quot; /&gt;&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;Longformer achieves SOTA using the small models with BPC of 1.10 and 1.00 for text8 and enwik8.&lt;/li&gt;
   &lt;li&gt;The large model was only tested on enwik8 due to the computational cost of training.&lt;/li&gt;
@@ -194,14 +194,14 @@ M834 80h400000v40h-400000z'/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&
   &lt;li&gt;Both models(small and large) trained with varying gradient updates.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/blog/images/longformer/copy_init.png&quot; alt=&quot;Copy init&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/longformer/copy_init.png&quot; alt=&quot;Copy init&quot; /&gt;&lt;/p&gt;
 &lt;center&gt;&lt;b&gt;MLM BPC for RoBERTA with various model config&lt;/b&gt;&lt;/center&gt;
 
 &lt;h1 id=&quot;task-specific-results&quot;&gt;Task-Specific Results&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Main results are summarized below:
-&lt;img src=&quot;/blog/images/longformer/main_results.png&quot; alt=&quot;Copy init&quot; /&gt;&lt;/li&gt;
+&lt;img src=&quot;/images/longformer/main_results.png&quot; alt=&quot;Copy init&quot; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;center&gt;&lt;b&gt;LongFormer Task Specific Results&lt;/b&gt;&lt;/center&gt;
 &lt;ul&gt;
@@ -225,7 +225,7 @@ M834 80h400000v40h-400000z'/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&
   &lt;li&gt;LongFormer paper available &lt;a href=&quot;https://arxiv.org/abs/2004.05150&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;Dair.ai NLP newsletter available &lt;a href=&quot;https://dair.ai/NLP_Newsletter_10_en/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;Open-sourced longformer code available &lt;a href=&quot;https://github.com/allenai/longformer/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://shubhamg.in/blog/images/longformer/training.png" /><media:content medium="image" url="https://shubhamg.in/blog/images/longformer/training.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">TagLM</title><link href="https://shubhamg.in/blog/nlp/language_model/review/2020/04/23/tag-lm.html" rel="alternate" type="text/html" title="TagLM" /><published>2020-04-23T00:00:00-05:00</published><updated>2020-04-23T00:00:00-05:00</updated><id>https://shubhamg.in/blog/nlp/language_model/review/2020/04/23/tag-lm</id><content type="html" xml:base="https://shubhamg.in/blog/nlp/language_model/review/2020/04/23/tag-lm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://shubhamg.in/images/longformer/training.png" /><media:content medium="image" url="https://shubhamg.in/images/longformer/training.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">TagLM</title><link href="https://shubhamg.in/nlp/language_model/review/2020/04/23/tag-lm.html" rel="alternate" type="text/html" title="TagLM" /><published>2020-04-23T00:00:00-05:00</published><updated>2020-04-23T00:00:00-05:00</updated><id>https://shubhamg.in/nlp/language_model/review/2020/04/23/tag-lm</id><content type="html" xml:base="https://shubhamg.in/nlp/language_model/review/2020/04/23/tag-lm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -330,7 +330,7 @@ forward-backward algorithm.&lt;/p&gt;
   &lt;li&gt;
     &lt;p&gt;Use Viterbi algorithm to find most likely sequence&lt;/p&gt;
 
-    &lt;p&gt;&lt;img src=&quot;/blog/images/taglm/overview.png&quot; alt=&quot;Overview of architecture[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;img src=&quot;/images/taglm/overview.png&quot; alt=&quot;Overview of architecture[]{data-label=&amp;quot;fig:overview&amp;quot;}&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;LM embedding will be created by concatenating forward and backward
@@ -388,7 +388,7 @@ dataset.&lt;/p&gt;
   &lt;li&gt;First method to incorporate contextual word embeddings using bidirectional networks.&lt;/li&gt;
   &lt;li&gt;Significantly better than other methods at the time that use other forms of transfer learning or joint learning on NER and and Chunking tasks.&lt;/li&gt;
   &lt;li&gt;It works well with unlabelled data from a different domain as well.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary></entry><entry><title type="html">How much do you know?</title><link href="https://shubhamg.in/blog/nlp/language_model/review/2020/04/21/knowledge-lm.html" rel="alternate" type="text/html" title="How much do you know?" /><published>2020-04-21T00:00:00-05:00</published><updated>2020-04-21T00:00:00-05:00</updated><id>https://shubhamg.in/blog/nlp/language_model/review/2020/04/21/knowledge-lm</id><content type="html" xml:base="https://shubhamg.in/blog/nlp/language_model/review/2020/04/21/knowledge-lm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary></entry><entry><title type="html">How much do you know?</title><link href="https://shubhamg.in/nlp/language_model/review/2020/04/21/knowledge-lm.html" rel="alternate" type="text/html" title="How much do you know?" /><published>2020-04-21T00:00:00-05:00</published><updated>2020-04-21T00:00:00-05:00</updated><id>https://shubhamg.in/nlp/language_model/review/2020/04/21/knowledge-lm</id><content type="html" xml:base="https://shubhamg.in/nlp/language_model/review/2020/04/21/knowledge-lm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -536,7 +536,7 @@ pre-training&lt;/p&gt;
     &lt;p&gt;Measure and improve performance on difficult QA tasks like DROP,
 which needs reasoning ability.&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary></entry><entry><title type="html">Attention is all you need</title><link href="https://shubhamg.in/blog/nlp/attention/review/2020/04/20/attention.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2020-04-20T00:00:00-05:00</published><updated>2020-04-20T00:00:00-05:00</updated><id>https://shubhamg.in/blog/nlp/attention/review/2020/04/20/attention</id><content type="html" xml:base="https://shubhamg.in/blog/nlp/attention/review/2020/04/20/attention.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary></entry><entry><title type="html">Attention is all you need</title><link href="https://shubhamg.in/nlp/attention/review/2020/04/20/attention.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2020-04-20T00:00:00-05:00</published><updated>2020-04-20T00:00:00-05:00</updated><id>https://shubhamg.in/nlp/attention/review/2020/04/20/attention</id><content type="html" xml:base="https://shubhamg.in/nlp/attention/review/2020/04/20/attention.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;This paper review is following the blog from Jay Alammar’s blog on
@@ -587,7 +587,7 @@ order to compute a representation of the sequence.&lt;/li&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
 
-    &lt;p&gt;&lt;img src=&quot;/blog/images/attention/transformer.png&quot; alt=&quot;Transformer[]{data-label=&amp;quot;fig:transformer&amp;quot;}&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;img src=&quot;/images/attention/transformer.png&quot; alt=&quot;Transformer[]{data-label=&amp;quot;fig:transformer&amp;quot;}&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
@@ -639,7 +639,7 @@ query with key.&lt;/p&gt;
   &lt;li&gt;
     &lt;p&gt;Scaled dot-product attention and multi-head attention&lt;/p&gt;
 
-    &lt;p&gt;&lt;img src=&quot;/blog/images/attention/attention_types.png&quot; alt=&quot;Types of Attention[]{data-label=&amp;quot;fig:attention&amp;quot;}&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;img src=&quot;/images/attention/attention_types.png&quot; alt=&quot;Types of Attention[]{data-label=&amp;quot;fig:attention&amp;quot;}&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;Attention is calculated as:&lt;/p&gt;
@@ -789,7 +789,7 @@ SOTA results on Machine Translation and English contituency parsing.&lt;/p&gt;
 Specially around self attention. I will give this paper another read
 after going through Jay Alammar’s blog.&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary></entry><entry><title type="html">REALM: Retrieval-Augmented Language MOdel Pre-Training</title><link href="https://shubhamg.in/blog/nlp/bert/review/2020/03/14/realm.html" rel="alternate" type="text/html" title="REALM: Retrieval-Augmented Language MOdel Pre-Training" /><published>2020-03-14T00:00:00-05:00</published><updated>2020-03-14T00:00:00-05:00</updated><id>https://shubhamg.in/blog/nlp/bert/review/2020/03/14/realm</id><content type="html" xml:base="https://shubhamg.in/blog/nlp/bert/review/2020/03/14/realm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary></entry><entry><title type="html">REALM: Retrieval-Augmented Language MOdel Pre-Training</title><link href="https://shubhamg.in/nlp/bert/review/2020/03/14/realm.html" rel="alternate" type="text/html" title="REALM: Retrieval-Augmented Language MOdel Pre-Training" /><published>2020-03-14T00:00:00-05:00</published><updated>2020-03-14T00:00:00-05:00</updated><id>https://shubhamg.in/nlp/bert/review/2020/03/14/realm</id><content type="html" xml:base="https://shubhamg.in/nlp/bert/review/2020/03/14/realm.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -810,7 +810,7 @@ retrieve documents over large corpus and can be trained in
 unsupervised manner using masked language modelling technique and
 backprop through retreiver which considers lots of docs.&lt;/p&gt;
 
-    &lt;p&gt;&lt;img src=&quot;/blog/images/realm/training.png&quot; alt=&quot;Training process for
+    &lt;p&gt;&lt;img src=&quot;/images/realm/training.png&quot; alt=&quot;Training process for
 REALM[]{data-label=&amp;quot;fig:training&amp;quot;}&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
@@ -985,7 +985,7 @@ using new $\theta$.&lt;/p&gt;
       &lt;li&gt;
         &lt;p&gt;&lt;em&gt;Secondary index builder&lt;/em&gt;: Embeds and indexes the docs&lt;/p&gt;
 
-        &lt;p&gt;&lt;img src=&quot;/blog/images/realm/async_mips.png&quot; alt=&quot;Async MIPS
+        &lt;p&gt;&lt;img src=&quot;/images/realm/async_mips.png&quot; alt=&quot;Async MIPS
 implementation[]{data-label=&amp;quot;fig:async_mips&amp;quot;}&quot; /&gt;&lt;/p&gt;
       &lt;/li&gt;
       &lt;li&gt;
@@ -1073,7 +1073,7 @@ knowledge not present in text&lt;/p&gt;
   &lt;li&gt;Tweet summary by Adam Roberts available &lt;a href=&quot;https://twitter.com/ada_rob/status/1227062195671822336&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;Video summary by Václav Košař available &lt;a href=&quot;https://twitter.com/ada_rob/status/1227062195671822336&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;Huggingface Reading group summary by Joe Davidson available &lt;a href=&quot;https://joeddav.github.io/blog/2020/03/03/REALM.html&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://shubhamg.in/blog/images/realm/training.png" /><media:content medium="image" url="https://shubhamg.in/blog/images/realm/training.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Bayesian Golf Putting Model</title><link href="https://shubhamg.in/blog/jupyter/bayesian/golf_putting/2020/03/12/tutorial.html" rel="alternate" type="text/html" title="Bayesian Golf Putting Model" /><published>2020-03-12T00:00:00-05:00</published><updated>2020-03-12T00:00:00-05:00</updated><id>https://shubhamg.in/blog/jupyter/bayesian/golf_putting/2020/03/12/tutorial</id><content type="html" xml:base="https://shubhamg.in/blog/jupyter/bayesian/golf_putting/2020/03/12/tutorial.html">&lt;!--
+&lt;/ul&gt;</content><author><name>Shubham Gupta</name></author><summary type="html">Introduction</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://shubhamg.in/images/realm/training.png" /><media:content medium="image" url="https://shubhamg.in/images/realm/training.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Bayesian Golf Putting Model</title><link href="https://shubhamg.in/jupyter/bayesian/golf_putting/2020/03/12/tutorial.html" rel="alternate" type="text/html" title="Bayesian Golf Putting Model" /><published>2020-03-12T00:00:00-05:00</published><updated>2020-03-12T00:00:00-05:00</updated><id>https://shubhamg.in/jupyter/bayesian/golf_putting/2020/03/12/tutorial</id><content type="html" xml:base="https://shubhamg.in/jupyter/bayesian/golf_putting/2020/03/12/tutorial.html">&lt;!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
@@ -3497,6 +3497,6 @@ The number of effective samples is smaller than 25% for some parameters.
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">First Post</title><link href="https://shubhamg.in/blog/intro/2020/01/14/first-post.html" rel="alternate" type="text/html" title="First Post" /><published>2020-01-14T00:00:00-06:00</published><updated>2020-01-14T00:00:00-06:00</updated><id>https://shubhamg.in/blog/intro/2020/01/14/first-post</id><content type="html" xml:base="https://shubhamg.in/blog/intro/2020/01/14/first-post.html">&lt;h1 id=&quot;yo&quot;&gt;Yo!&lt;/h1&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">First Post</title><link href="https://shubhamg.in/intro/2020/01/14/first-post.html" rel="alternate" type="text/html" title="First Post" /><published>2020-01-14T00:00:00-06:00</published><updated>2020-01-14T00:00:00-06:00</updated><id>https://shubhamg.in/intro/2020/01/14/first-post</id><content type="html" xml:base="https://shubhamg.in/intro/2020/01/14/first-post.html">&lt;h1 id=&quot;yo&quot;&gt;Yo!&lt;/h1&gt;
 
 &lt;p&gt;Super excited to &lt;strong&gt;finally&lt;/strong&gt; get my own blog. Hope to write out those long pending articles ASAP now. Stay tuned!&lt;/p&gt;</content><author><name></name></author><summary type="html">Yo!</summary></entry></feed>
