@@ -3,6 +3,7 @@ toc: true
 layout: post
 description: Transformers for loooong documents
 author: Shubham Gupta
+comments: true
 categories: [nlp, transformer, review, longformer]
 image: images/longformer/training.png
 title: LongFormer
